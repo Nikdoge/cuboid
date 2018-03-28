@@ -1,12 +1,13 @@
 --Made by Nikdoge 20140825
---version 4
+--version 5
 local tArgs = {...}
 local lenght = tonumber(tArgs[1])
 local width = tonumber(tArgs[2])
 local depth = tonumber(tArgs[3])
-if width==nil or lenght==nil or depth==nil then
+local safety = tArgs[4]
+if width==nil or lenght==nil or depth==nil or (safety~="unsafe" and safety~=nil) then
   print("Error: Wrong usage!")
-  print("cuboid.p [lenght] [width] [depth]")
+  print("cuboid.p [lenght] [width] [depth] <unsafe>")
   return
 end
 if lenght<1 or width<1 or depth<1 then
@@ -14,23 +15,34 @@ if lenght<1 or width<1 or depth<1 then
   return
 end
 local function tryDig()
-  while turtle.detect() do
-    turtle.dig()
-    sleep(1)
+  if safety=="unsafe" then
+    turtle.Up()
+  else
+    while turtle.detect() do
+      turtle.dig()
+      sleep(1)
+    end
   end
 end
 local function tryDigUp()
-  while turtle.detectUp() do
+  if safety=="unsafe" then
     turtle.digUp()
-    sleep(1)
+  else
+    while turtle.detectUp() do
+      turtle.digUp()
+      sleep(1)
+    end
   end
 end
 print("Program Cuboid")
-print("Version: 4")
+print("Version: 5")
 print("Initializing data...")
 print("Lenght (x) = "..lenght)
 print("Width (y) = "..width)
 print("Depth (z) = "..depth)
+if safety=="unsafe" then
+  print("Unsafe mode: fallen block check is disabled")
+end
 local layers=(depth-depth%3)/3 --Triple layers
 turtle.turnRight()
 if layers>0 then
